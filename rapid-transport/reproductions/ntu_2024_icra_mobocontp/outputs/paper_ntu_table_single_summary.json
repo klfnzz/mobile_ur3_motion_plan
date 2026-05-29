@@ -1,0 +1,89 @@
+{
+  "actual_tcp_tracking_error": {
+    "count": 501,
+    "max_index": 24,
+    "max_m": 4.3773528172713555e-06,
+    "mean_m": 7.58274936297535e-07
+  },
+  "base_constraints": {},
+  "cartesian_tracking_openrave_collision": {
+    "enabled": true,
+    "env_collision_samples": [],
+    "self_collision_samples": []
+  },
+  "config": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/config/paper_ntu_table_single.yaml",
+  "cost": 28.38902694950544,
+  "failed_numeric_ik_samples": [],
+  "feasible_counts": {
+    "0": 853,
+    "1": 791,
+    "10": 837,
+    "11": 708,
+    "12": 533,
+    "13": 487,
+    "14": 531,
+    "15": 537,
+    "16": 509,
+    "17": 577,
+    "18": 678,
+    "19": 770,
+    "2": 680,
+    "20": 853,
+    "3": 587,
+    "4": 555,
+    "5": 528,
+    "6": 551,
+    "7": 601,
+    "8": 796,
+    "9": 789
+  },
+  "ik_mode": "load",
+  "num_controls": 897,
+  "num_grid_states_per_stage": 7920,
+  "num_task_samples": 21,
+  "openrave_whole_robot_collision": {
+    "enabled": true,
+    "env_collision_samples": [],
+    "self_collision_samples": []
+  },
+  "outputs": {
+    "actual_tcp_csv": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/outputs/paper_ntu_table_single_actual_tcp.csv",
+    "cartesian_tracking_csv": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/outputs/paper_ntu_table_single_cartesian_tracking.csv",
+    "dense_csv": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/outputs/paper_ntu_table_single_dense_base_ee.csv",
+    "target_path_csv": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/outputs/paper_ntu_table_single_target_path.csv",
+    "top_view_svg": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/outputs/paper_ntu_table_single_top_view.svg",
+    "trajectory_csv": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/outputs/paper_ntu_table_single_trajectory.csv"
+  },
+  "paper_method": "MoboConTP-style backward dynamic programming in base spacetime",
+  "scene": "/workspaces/\u590d\u73b0/rapid-transport/reproductions/ntu_2024_icra_mobocontp/models/ntu_table_single.env.xml",
+  "valid_voxel_cloud": {
+    "enabled": false
+  },
+  "vehicle_front_work_heading_error": {
+    "max_deg": 14.101621256868833,
+    "mean_deg": 4.901732345931468,
+    "per_sample_deg": [
+      11.309932474020195,
+      5.817574064247123,
+      2.9339801266590846,
+      6.28109131002274,
+      4.3714383275269,
+      5.328798211160999,
+      5.350071892010859,
+      4.064765351440238,
+      5.580880276424936,
+      14.101621256868833,
+      3.029188872897747,
+      5.767459930143243,
+      1.5401388935401388,
+      2.511721304507814,
+      6.117362793771136,
+      1.6578953116989854,
+      2.477783238864451,
+      0.12065813924654034,
+      7.383640971734099,
+      1.479783380275404,
+      5.710593137499378
+    ]
+  }
+}

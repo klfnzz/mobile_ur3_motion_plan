@@ -1,0 +1,18 @@
+<Kinbody name="jig">
+  <body name="camra" type="dynamic">
+    <geom type="trimesh" modifiable="false">
+      <data>meshes/camera.STL 0.001</data>
+      <render>meshes/camera.STL 0.001</render>
+      <diffusecolor>0.3 0.3 0.3</diffusecolor>
+      <ambientcolor>0.3 0.3 0.3</ambientcolor>
+      <translation>-0.169 -0.143 -0.008</translation>
+    </geom>  
+    <!--
+    <geom type="box">
+	  <Extents>0.05 0.2 0.02</Extents>
+	  <Translation>-0.14 0 -0.02</Translation>
+	  <diffuseColor>1 1 1</diffuseColor>
+	  </geom>
+    -->
+  </body>
+</Kinbody>

@@ -1,0 +1,102 @@
+# Paper-style NTU mobile 3D-printing task from Fig. 1.
+#
+# The paper reports: NTU shape, 10 layers, size 3.0 x 0.75 x 0.15 m,
+# total printing path length 112.9 m, constant nozzle speed 10 cm/s.
+# The exact CAD waypoints are not listed in the PDF, so this config generates
+# a paper-scale grouped-letter NTU stroke path and adjusts the generated
+# strokes so the total geometric length matches 112.9 m.
+
+scene: models/open_workspace.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+task:
+  name: paper_ntu_shape
+  duration: 1128.0
+  dt: 12.0
+  path:
+    type: ntu_filled_layers
+    origin: [-1.50, 0.375, 0.56]
+    width: 3.0
+    letter_height: 0.75
+    build_height: 0.15
+    layers: 10
+    layer_height: 0.0166666667
+    letter_gap: 0.08
+    stroke_width: 0.2761242784
+    fill_rows: 3
+    group_by_letter: true
+    target_total_length: 112.9
+    alternate_layers: true
+  # Task TCP Z axis is the suction direction and points along world -Z.
+  orientation_rpy_deg: [180.0, 0.0, 0.0]
+
+base_grid:
+  x_range: [-2.00, 2.00]
+  y_range: [-0.80, 0.80]
+  yaw_range_deg: [0.0, 0.0]
+  dx: 0.10
+  dy: 0.10
+  dyaw_deg: 6.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 6.0
+  vmax: 0.18
+  omega_max_deg: 18.0
+
+cost:
+  yaw_weight: 0.35
+
+reachability:
+  min_radius: 0.05
+  max_radius: 0.90
+  min_height: 0.35
+  max_height: 0.95
+  max_heading_error_deg: 180.0
+
+valid_voxel_cloud:
+  enabled: true
+  voxel_size: 0.10
+  cache: outputs/paper_ntu_shape_valid_voxel_cloud_tcp_z_down_tilt1.npz
+  rebuild: false
+  x_range: [-0.90, 0.90]
+  y_range: [-0.90, 0.90]
+  z_range: [0.35, 0.95]
+  x_min: -0.55
+  r_min: 0.05
+  r_max: 0.90
+  shoulder_offset: [0.0, 0.0, 0.18]
+
+collision:
+  obstacles: []
+
+ik:
+  mode: load
+  filter_admissible: false
+  orientation_search:
+    enabled: true
+    tool_axis: z
+    world_axis: [0.0, 0.0, -1.0]
+    # IKFast is singular for the exactly vertical Transform6D pose in this UR3
+    # model. The planner uses a 1 degree cone to build the valid voxel cloud;
+    # the final trajectory is refined below as a 5D task so TCP local Z points down.
+    tilt_deg: [1.0]
+    yaw_deg: [-180.0, 180.0, 30.0]
+  numeric_axis_refine:
+    enabled: true
+    tool_axis: z
+    world_axis: [0.0, 0.0, -1.0]
+    position_tolerance: 0.004
+    axis_tolerance_deg: 0.5
+    position_weight: 30.0
+    axis_weight: 8.0
+    regularization_weight: 0.03
+    max_nfev: 120
+    collision_check: false
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+output:
+  dir: outputs
+  basename: paper_ntu_shape

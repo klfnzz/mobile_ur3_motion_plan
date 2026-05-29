@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Robot name="denso_robotiq_85_gripper">
+  
+  <!-- Include the robots -->
+  <Robot file="irb1200_5_90_lowspeed.dae">
+    <diffuseColor>0.8 0.8 0.8</diffuseColor>
+    <ambientcolor>0.6 0.6 0.6</ambientcolor>
+  </Robot>
+
+  <Manipulator name="gripper">
+    <base>base_link</base>
+    <effector>tool0</effector>
+    <translation>0 0 0</translation>
+    <closingdirection>-1 1 -1 0</closingdirection>
+    <direction>1 1 1</direction>
+  </Manipulator>
+</Robot>

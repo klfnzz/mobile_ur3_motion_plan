@@ -1,0 +1,82 @@
+# Compact visual demo for showing the mobile base and UR3 arm moving together.
+#
+# It keeps the MoboConTP base-spacetime DP flow, adds a base start/goal
+# constraint so the optimizer cannot choose a stationary base, and filters the
+# compact grid with OpenRAVE IK when run with --ik load.
+
+scene: models/open_workspace.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+task:
+  name: arm_motion_demo
+  duration: 12.0
+  dt: 1.0
+  path:
+    type: line
+    # start: [0.30, -0.20, 0.70]
+    # end: [1.10, -0.20, 0.70]
+    start: [0.30, -0.20, 0.70]
+    end: [1.10, -0.20, 0.70]
+
+  orientation_rpy_deg: [0.0, 90.0, 0.0]
+
+base_grid:
+  x_range: [0.25, 0.95]
+  y_range: [-0.35, 0.10]
+  yaw_range_deg: [180.0, 180.0]
+  dx: 0.05
+  dy: 0.05
+  dyaw_deg: 10.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 10.0
+  vmax: 0.18
+  omega_max_deg: 30.0
+
+cost:
+  yaw_weight: 0.35
+
+reachability:
+  min_radius: 0.05
+  max_radius: 0.80
+  min_height: 0.40
+  max_height: 1.00
+  max_heading_error_deg: 180.0
+
+valid_voxel_cloud:
+  enabled: true
+  voxel_size: 0.05
+  cache: outputs/arm_motion_valid_voxel_cloud.npz
+  rebuild: false
+  x_range: [-0.80, 0.80]
+  y_range: [-0.80, 0.80]
+  z_range: [0.40, 1.00]
+  x_min: -0.80
+  r_min: 0.05
+  r_max: 0.80
+  shoulder_offset: [0.0, 0.0, 0.18]
+
+collision:
+  obstacles: []
+
+ik:
+  mode: off
+  filter_admissible: false
+  orientation_search:
+    enabled: true
+    roll_deg: [0.0]
+    pitch_deg: [90.0]
+    yaw_deg: [-180.0, 180.0, 30.0]
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+base_constraints:
+  start: [0.35, 0.00, 180.0]
+  goal: [0.85, -0.25, 180.0]
+  tolerance_xy: 0.051
+  tolerance_yaw_deg: 5.0
+output:
+  dir: outputs
+  basename: arm_motion_demo

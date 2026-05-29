@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Kinbody name="bottle_1">
+ <Body name="Body1" type="dynamic">
+   <Mass type="mimicgeom">
+     <density>500</density>
+   </Mass>
+   <Geom type="box">
+     <Extents>74e-3 40e-3 40e-3 </Extents>
+     <diffuseColor>0.2 1.0 1.0</diffuseColor>
+   </Geom>
+ </Body>
+</Kinbody>

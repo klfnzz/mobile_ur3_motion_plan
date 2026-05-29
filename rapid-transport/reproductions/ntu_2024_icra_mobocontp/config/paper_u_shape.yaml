@@ -1,0 +1,82 @@
+# Paper-style U-shape mobile 3D-printing task from Fig. 7.
+#
+# The paper reports: U shape 0.9 x 0.675 x 0.05 m, 5 layers, total printing
+# path 19.85 m, constant nozzle speed 10 cm/s. The exact CAD waypoints are
+# not listed in the PDF, so this config generates a U contour with three
+# offset passes per layer. Its geometric length is about 19.85 m, matching
+# the reported total. Duration is rounded to 198 s so dt=3 s divides exactly.
+
+scene: models/open_workspace.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+task:
+  name: paper_u_shape
+  duration: 198.0
+  dt: 3.0
+  path:
+    type: u_shape_layers
+    origin: [0.10, 0.35, 0.62]
+    width: 0.90
+    depth: 0.675
+    height: 0.05
+    layers: 5
+    layer_height: 0.0125
+    offsets: [0.0, 0.118]
+    alternate_layers: true
+  orientation_rpy_deg: [0.0, 90.0, 0.0]
+
+base_grid:
+  x_range: [-0.25, 0.85]
+  y_range: [-0.55, 0.55]
+  yaw_range_deg: [180.0, 180.0]
+  dx: 0.05
+  dy: 0.05
+  dyaw_deg: 6.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 6.0
+  vmax: 0.18
+  omega_max_deg: 18.0
+
+cost:
+  yaw_weight: 0.35
+
+reachability:
+  min_radius: 0.05
+  max_radius: 0.85
+  min_height: 0.40
+  max_height: 1.00
+  max_heading_error_deg: 180.0
+
+valid_voxel_cloud:
+  enabled: true
+  voxel_size: 0.05
+  cache: outputs/paper_u_shape_valid_voxel_cloud.npz
+  rebuild: false
+  x_range: [-0.85, 0.85]
+  y_range: [-0.85, 0.85]
+  z_range: [0.40, 1.00]
+  x_min: -0.85
+  r_min: 0.05
+  r_max: 0.85
+  shoulder_offset: [0.0, 0.0, 0.18]
+
+collision:
+  obstacles: []
+
+ik:
+  mode: off
+  filter_admissible: false
+  orientation_search:
+    enabled: true
+    roll_deg: [0.0]
+    pitch_deg: [90.0]
+    yaw_deg: [-180.0, 180.0, 30.0]
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+output:
+  dir: outputs
+  basename: paper_u_shape

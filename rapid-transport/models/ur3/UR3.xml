@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Robot name="UR3">
+  <!-- Include the robots -->
+  <Robot file="ur3.dae">
+    <!-- <rotationaxis>1 0 0 -90</rotationaxis> -->
+    <!-- <rotationaxis>0 1 0 90</rotationaxis> -->
+    <!-- <translation>-0.120 0.343 0.310</translation> -->
+    <translation>0 0.122 0.659</translation>
+    <diffuseColor>0.8 0.8 0.8</diffuseColor>
+    <ambientcolor>0.6 0.6 0.6</ambientcolor>
+  </Robot>
+
+  <Manipulator name="gripper">
+    <base>base_link</base>
+    <effector>wrist_3_link</effector>
+    <translation>0 0 0</translation>
+    <closingdirection>-1 1 -1 0</closingdirection>
+    <direction>1 1 1</direction>
+  </Manipulator>
+
+</Robot>  

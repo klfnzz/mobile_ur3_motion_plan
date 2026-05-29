@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Robot name="ur3">
+  
+  <!-- Include the robots -->
+  <Robot file="ur3.dae">
+    <diffuseColor>0.8 0.8 0.8</diffuseColor>
+    <ambientcolor>0.6 0.6 0.6</ambientcolor>
+    <!-- <translation>0 0.0 0.05</translation> -->
+    <rotationaxis>0 0 1 180</rotationaxis>
+    <translation>0.200 0 0.659</translation>
+  </Robot>
+
+  <Kinbody name="ranger_base">
+    <body name="ranger_base" type="dynamic">
+        <geom type="trimesh" modifiable="false">
+        <data>ranger_mini.STL 0.001</data>
+        <render>ranger_mini.STL 0.001</render>
+        <diffusecolor>0.8 0.8 0.8</diffusecolor>
+        <ambientcolor>0 0 0</ambientcolor>
+        <translation>0 0 0.3</translation>
+        <rotationaxis>1 0 0 90</rotationaxis>
+        <rotationaxis>0 0 1 180</rotationaxis>
+        <!-- <rotationaxis>0 0 1 -90</rotationaxis> -->
+        <!-- <translation>0 -0.122 -0.659</translation> -->
+        </geom>  
+    </body>
+  </Kinbody>
+  <Kinbody name="zhijia">
+    <body name="zhijia" type="dynamic">
+        <geom type="trimesh" modifiable="false">
+        <data>zhijia.STL 0.001</data>
+        <render>zhijia.STL 0.001</render>
+        <diffusecolor>0.8 0.8 0.8</diffusecolor>
+        <ambientcolor>0 0 0</ambientcolor>
+        <rotationaxis>1 0 0 90</rotationaxis>
+        <rotationaxis>0 0 1 180</rotationaxis>
+        <translation>0.57014 0.14935 -0.12731</translation>
+        </geom>  
+    </body>
+    <joint name="zhijia_joint" type="hinge" enable="false">
+        <body>ranger_base</body>
+        <body>zhijia</body>
+        <limits>0 0</limits>
+    </joint>
+  </Kinbody>
+
+  <Kinbody>
+      <joint name="zhijia_base_joint" type="hinge" enable="false">
+          <body>zhijia</body>
+          <body>base_link</body>
+          <limits>0 0</limits>
+      </joint>
+  </Kinbody>
+
+  <!-- Lower Interface Plate -->
+<kinbody>
+    <body name='suction_cup_holder' type="dynamic">
+      <geom type="trimesh" modifiable="true">
+        <diffuseColor> 0.69019608  0.76862745  0.87058824</diffuseColor>
+        <render>cup/ur-tray_mm.STL 0.001</render>
+        <collision>cup/ur-tray_mm.STL 0.001</collision>
+      </geom>
+      <offsetfrom>tool0</offsetfrom>
+      <rotationaxis>1 0 0 180</rotationaxis>
+      <translation>-0.0315 0.09344 0.00755</translation>
+    </body>
+    <joint name="joint_suction_cup_holder" type="hinge" enable="false">
+      <body>tool0</body>
+      <body>suction_cup_holder</body>
+      <limits>0 0</limits>
+    </joint>
+
+    <body name="suction_head" type="dynamic">
+      <geom type="trimesh" modifiable="true">
+        <diffuseColor> 0.43921569  0.50196078  0.56470588 </diffuseColor>
+        <render>cup/cup_2_mm.STL 0.001</render>
+        <collision>cup/cup_2_mm.STL 0.001</collision>
+      </geom>
+      <offsetfrom>suction_cup_holder</offsetfrom>
+      <rotationaxis>1 0 0 90</rotationaxis>
+      <translation>0.0205 0.04169 -0.0475 </translation>
+    </body>
+    <joint name="joint_suction_head" type="hinge" enable="false">
+      <body>suction_cup_holder</body>
+      <body>suction_head</body>
+      <limits>0 0</limits>
+    </joint>
+
+    <body name="skirt" type="dynamic">
+      <geom type="trimesh" modifiable="true">
+        <diffuseColor> 0.43921569  0.50196078  0.56470588 </diffuseColor>
+        <render>cup/cup_mm.STL 0.001</render>
+        <collision>cup/cup_mm.STL 0.001</collision>
+      </geom>
+      <offsetfrom>suction_head</offsetfrom>
+
+      <translation>-0.014 -0.024 -0.014</translation>
+    </body>
+     <joint name="joint_skirt" type="hinge" enable="false">
+      <body>suction_head</body>
+      <body>skirt</body>
+      <limits>0 0</limits>
+    </joint>
+
+
+  </kinbody>
+
+  <!-- Define the manipulator -->
+  <manipulator name="denso_ft_sensor">
+    <base>base_link</base>
+    <effector>suction_cup_holder</effector>
+    <rotationaxis>0 1 0 90</rotationaxis>
+    <rotationaxis>1 0 0 -90</rotationaxis>
+    <translation>0.003 0.04 0.092</translation>
+  </manipulator>
+
+  <!-- Define the manipulator -->
+  <manipulator name="denso_suction_cup">
+    <base>base_link</base>
+    <effector>suction_head</effector>
+    <rotationaxis>1 0 0 180</rotationaxis>
+    <translation>0.014 0.0 0.014 </translation>
+  </manipulator>
+
+  <!-- A slightly longer manipulator -->
+  <manipulator name="denso_suction_cup2">  
+    <base>base_link</base>
+    <effector>skirt</effector>
+    <rotationaxis>1 0 0 90</rotationaxis>
+    <translation>0.027 0.0 0.027 </translation>
+  </manipulator>
+</Robot>

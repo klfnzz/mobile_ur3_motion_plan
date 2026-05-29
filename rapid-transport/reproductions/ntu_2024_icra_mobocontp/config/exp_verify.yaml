@@ -1,0 +1,68 @@
+# Verification experiment for the NTU 2024 ICRA MoboConTP reproduction.
+#
+# This scene is intentionally more diagnostic than the default straight-line
+# example: the end-effector follows a U-shaped continuous printing path, while
+# rectangular base obstacles remove part of the admissible B-spacetime. The
+# resulting optimal base trajectory should move in several nonzero steps and
+# avoid the blocked regions.
+
+scene: models/exp_verify_ur3_ranger.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+task:
+  name: exp_verify_u_shape_printing
+  duration: 24.0
+  dt: 1.0
+  path:
+    type: polyline
+    waypoints:
+      - [0.34, -0.28, 0.64]
+      - [0.34, 0.22, 0.64]
+      - [1.28, 0.22, 0.64]
+      - [1.28, -0.28, 0.64]
+  orientation_rpy_deg: [180.0, 0.0, 0.0]
+
+base_grid:
+  x_range: [-0.10, 1.20]
+  y_range: [-0.60, 0.45]
+  yaw_range_deg: [160.0, 200.0]
+  dx: 0.05
+  dy: 0.05
+  dyaw_deg: 10.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 10.0
+  vmax: 0.12
+  omega_max_deg: 20.0
+
+cost:
+  yaw_weight: 0.35
+
+reachability:
+  min_radius: 0.18
+  max_radius: 0.42
+  min_height: 0.50
+  max_height: 0.90
+  max_heading_error_deg: 180.0
+
+collision:
+  obstacles:
+    - name: exp_verify_block
+      center: [0.48, -0.44]
+      half_extents: [0.10, 0.08]
+      clearance: 0.10
+    - name: exp_verify_side_block
+      center: [1.16, 0.36]
+      half_extents: [0.10, 0.08]
+      clearance: 0.08
+
+ik:
+  mode: off
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+output:
+  dir: outputs
+  basename: exp_verify

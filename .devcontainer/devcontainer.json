@@ -1,0 +1,33 @@
+{
+  "name": "openrave_container_test1",
+  "image": "openrave:latest",
+  "runArgs": [
+    "--name", "openrave_container_test1",
+    "--init",
+    "--privileged",
+    // 网络与代理配置
+    "--network", "host", 
+    "--gpus", "all",
+    // GUI 配置
+    "--env=DISPLAY=${localEnv:DISPLAY}",
+    "--env", "QT_X11_NO_MITSHM=1",
+    "--volume", "/tmp/.X11-unix:/tmp/.X11-unix:rw",
+    // 文件与设备挂载
+    "--volume", "/dev:/dev"
+  ],
+  "mounts": [
+    "source=/home/qwe/.codex,target=/root/.codex,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "CODEX_HOME": "/root/.codex"
+  },
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "openai.chatgpt"
+      ]
+    }
+  },
+  "workspaceFolder": "/workspaces/复现/rapid-transport/"
+}

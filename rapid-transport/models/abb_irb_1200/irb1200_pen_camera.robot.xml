@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Robot name="denso_robotiq_85_gripper">
+  
+  <!-- Include the robots -->
+  <Robot file="irb1200_5_90_lowspeed.dae">
+    <diffuseColor>0.8 0.8 0.8</diffuseColor>
+    <ambientcolor>0.6 0.6 0.6</ambientcolor>
+  </Robot>
+  
+  <!-- Attach the gripper to the robot -->
+  <Kinbody file="pen_camera.xml">
+    <!-- <rotationaxis>1 0 0 180</rotationaxis>-->
+    <rotationaxis>0 1 0 90</rotationaxis>
+    <translation>0.0 0 0</translation>
+  </Kinbody>
+  
+  <!-- Attach the gripper to the robot -->
+  <Kinbody>
+    <body name="camra">
+      <offsetfrom>link_6</offsetfrom>
+    </body>
+    <joint name="camra" type="hinge" enable="false">
+      <body>link_6</body>
+      <body>camra</body>
+      <limits>0 0</limits>
+    </joint>
+  </Kinbody>
+
+  <Manipulator name="gripper">
+    <base>base_link</base>
+    <effector>camra</effector>
+    <translation>-0.1025 0.035 0.145</translation>
+    <!-- <translation>-0.144 0 0.144</translation> 0.216227-->
+    <closingdirection>-1 1 -1 0</closingdirection>
+    <direction>1 1 1</direction>
+  </Manipulator>
+</Robot>

@@ -1,0 +1,85 @@
+# Larger visual simulation for the NTU 2024 ICRA MoboConTP reproduction.
+#
+# This experiment removes the printing table and uses an open workspace with
+# several wall/column obstacles. The end-effector follows a longer continuous
+# serpentine trajectory, so the base must move across the workspace while
+# staying inside the time-varying admissible reachability region.
+
+scene: models/large_printing_world.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+task:
+  name: large_serpentine_mobile_printing
+  duration: 36.0
+  dt: 1.0
+  path:
+    type: polyline
+    waypoints:
+      - [0.28, -0.52, 0.64]
+      - [0.28, 0.42, 0.64]
+      - [0.78, 0.42, 0.64]
+      - [0.78, -0.42, 0.64]
+      - [1.28, -0.42, 0.64]
+      - [1.28, 0.42, 0.64]
+      - [1.82, 0.42, 0.64]
+      - [1.82, -0.52, 0.64]
+  orientation_rpy_deg: [180.0, 0.0, 0.0]
+
+base_grid:
+  x_range: [-0.20, 1.90]
+  y_range: [-0.85, 0.65]
+  yaw_range_deg: [160.0, 200.0]
+  dx: 0.05
+  dy: 0.05
+  dyaw_deg: 10.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 10.0
+  vmax: 0.12
+  omega_max_deg: 20.0
+
+cost:
+  yaw_weight: 0.35
+
+reachability:
+  min_radius: 0.18
+  max_radius: 0.46
+  min_height: 0.50
+  max_height: 0.90
+  max_heading_error_deg: 180.0
+
+collision:
+  obstacles:
+    - name: column_left
+      center: [0.45, -0.58]
+      half_extents: [0.10, 0.12]
+      clearance: 0.10
+    - name: column_mid
+      center: [1.00, 0.48]
+      half_extents: [0.12, 0.10]
+      clearance: 0.10
+    - name: column_right
+      center: [1.72, -0.44]
+      half_extents: [0.10, 0.14]
+      clearance: 0.10
+    - name: wall_back
+      center: [1.35, 0.82]
+      half_extents: [0.58, 0.055]
+      clearance: 0.08
+
+ik:
+  mode: off
+  filter_admissible: false
+  orientation_search:
+    enabled: true
+    roll_deg: [0.0]
+    pitch_deg: [90.0]
+    yaw_deg: [-180.0, 180.0, 15.0]
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+output:
+  dir: outputs
+  basename: large_printing_world

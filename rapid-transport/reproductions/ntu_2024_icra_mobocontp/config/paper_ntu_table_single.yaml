@@ -1,0 +1,151 @@
+# Single-pass NTU task on a flat printing plane.
+#
+# This is a visualization-oriented version of the paper Fig. 1 task: it keeps
+# the reported NTU footprint proportionally for UR3 reachability, and prints
+# only one layer on the plane instead of stacking 10 layers.
+
+scene: models/ntu_table_single.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+base_model:
+  # The vehicle front is the side close to the zhijia support / UR3 arm.
+  # With robot.SetTransform(yaw=0), that support side points along the model
+  # local -X direction, so planner base_yaw uses model_yaw + 180 deg.
+  front_yaw_at_identity_deg: 180.0
+
+task:
+  name: paper_ntu_table_single
+  duration: 50.0
+  dt: 2.5
+  path:
+    type: ntu_art_layers
+    origin: [-0.60, 0.15, 0.56]
+    width: 1.20
+    letter_height: 0.30
+    build_height: 0.0
+    layers: 1
+    layer_height: 0.0
+    letter_gap: 0.08
+    u_bottom_height: 0.28
+    u_arc_samples: 24
+    cad_linear_step: 0.025
+    cad_arc_step: 0.018
+    visual_stroke_width: 0.064
+    alternate_layers: false
+  # The suction direction is the TCP local Z axis, pointing down to the plane.
+  orientation_rpy_deg: [180.0, 0.0, 0.0]
+
+base_grid:
+  x_range: [-1.30, 1.30]
+  y_range: [-0.90, 0.90]
+  yaw_range_deg: [-180.0, 180.0]
+  dx: 0.125
+  dy: 0.125
+  dyaw_deg: 15.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 6.0
+  vmax: 0.24
+  omega_max_deg: 36.0
+
+cost:
+  yaw_weight: 20.00
+  heading_weight: 1.50
+  radial_weight: 12.00
+
+reachability:
+  min_radius: 0.05
+  max_radius: 0.82
+  target_radius: 0.48
+  min_height: 0.35
+  max_height: 0.95
+  # Enforce that the planner's vehicle +X/front direction points toward the
+  # manipulator work target. A value of 90 deg keeps every TCP target in the
+  # front half-space of the vehicle; the heading cost below makes it prefer a
+  # tighter alignment when the velocity and collision constraints allow it.
+  max_heading_error_deg: 90.0
+
+valid_voxel_cloud:
+  enabled: false
+  voxel_size: 0.10
+  cache: outputs/paper_ntu_shape_valid_voxel_cloud_tcp_z_down_tilt1.npz
+  rebuild: false
+  x_range: [-0.80, 0.80]
+  y_range: [-0.80, 0.80]
+  z_range: [0.35, 0.95]
+  x_min: -0.55
+  r_min: 0.05
+  r_max: 0.82
+  max_heading_error_deg: 75.0
+  shoulder_offset: [0.0, 0.0, 0.18]
+
+collision:
+  # Paper-style B_free(t): when constructing each admissible B-space, remove
+  # base poses whose ground footprint intersects the table/under-table obstacle.
+  # The rectangle is expressed in the planner's base_yaw frame, where yaw=0
+  # means the zhijia/arm support side of the vehicle points along world +X.
+  footprint:
+    shape: box
+    half_extents: [0.18, 0.16]
+    center_offset: [-0.20, 0.00]
+  obstacles:
+    - name: ntu_table_footprint
+      kind: static
+      center: [0.0, 0.0]
+      half_extents: [0.74, 0.22]
+      clearance: 0.02
+
+openrave_collision:
+  # Extra paper-style collision filtering using the real OpenRAVE robot
+  # geometry. This checks the mobile base, zhijia support, UR3 links, and tool
+  # against the table and table edges, instead of relying only on the 2D
+  # footprint approximation.
+  enabled: true
+  check_self: true
+
+base_guidance:
+  enabled: true
+  mode: cost
+  type: table_side_band
+  center: [0.0, 0.0]
+  half_extents: [0.74, 0.22]
+  track_offset: [0.34, 0.36]
+  tolerance: 0.34
+  corner_margin: 0.20
+  clamp_margin: 0.03
+  split_y: 0.12
+  cost_weight: 3.00
+
+ik:
+  mode: load
+  # Keep the planner fast by using the paper-style geometric admissible
+  # workspace during DP. The final selected base trajectory is still checked
+  # strictly by numeric TCP-axis IK below; allow_partial=false makes the run
+  # fail if any sampled target cannot be reached by the UR3.
+  filter_admissible: false
+  orientation_search:
+    enabled: true
+    tool_axis: z
+    world_axis: [0.0, 0.0, -1.0]
+    tilt_deg: [1.0]
+    yaw_deg: [-180.0, 180.0, 30.0]
+  numeric_axis_refine:
+    enabled: true
+    tool_axis: z
+    world_axis: [0.0, 0.0, -1.0]
+    position_tolerance: 0.004
+    axis_tolerance_deg: 2.0
+    position_weight: 30.0
+    axis_weight: 8.0
+    regularization_weight: 0.03
+    max_nfev: 220
+    collision_check: true
+    allow_partial: false
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+output:
+  dir: outputs
+  basename: paper_ntu_table_single

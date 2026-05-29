@@ -1,0 +1,73 @@
+# Reproduction task for:
+# "Planning Optimal Trajectories for Mobile Manipulators under
+# End-effector Trajectory Continuity Constraint", ICRA 2024.
+#
+# The script treats the task as a mobile printing/spraying problem:
+# a time-parametrized end-effector trajectory is fixed, then the mobile
+# base is planned in configuration spacetime with the MoboConTP-style
+# backward dynamic programming algorithm.
+
+scene: models/ur3_ranger_printing.env.xml
+robot: ur3
+manipulator: denso_suction_cup2
+
+task:
+  name: ur3_ranger_mobile_1d_printing
+  duration: 12.0
+  dt: 1.0
+  path:
+    type: line
+    start: [0.35, -0.24, 0.64]
+    end: [1.35, 0.24, 0.64]
+  # The end-effector frame is kept fixed in world for this default task.
+  # This is a 6D approximation of the paper's 5D printing task; the
+  # reproduction keeps the time-parametrized task-space continuity central.
+  orientation_rpy_deg: [180.0, 0.0, 0.0]
+
+base_grid:
+  x_range: [-0.10, 1.20]
+  y_range: [-0.65, 0.35]
+  yaw_range_deg: [160.0, 200.0]
+  dx: 0.05
+  dy: 0.05
+  dyaw_deg: 10.0
+
+controls:
+  dvx: 0.05
+  dvy: 0.05
+  domega_deg: 10.0
+  vmax: 0.12
+  omega_max_deg: 20.0
+
+cost:
+  yaw_weight: 0.35
+
+reachability:
+  # The paper uses a geometric reachable region from voxelized IK.
+  # Here we keep the same admissible-B-spacetime idea but build it
+  # from this UR3+Ranger scene using distance/orientation filters,
+  # with optional OpenRAVE IK verification.
+  min_radius: 0.18
+  max_radius: 0.42
+  min_height: 0.50
+  max_height: 0.90
+  max_heading_error_deg: 180.0
+
+collision:
+  obstacles:
+    - name: base_obstacle
+      center: [0.72, -0.42]
+      half_extents: [0.24, 0.15]
+      clearance: 0.12
+
+ik:
+  mode: off
+  # mode choices:
+  #   off      - fastest; only build and export the optimal base trajectory.
+  #   load     - use an existing OpenRAVE IKFast cache if available.
+  #   generate - generate IKFast if no cache exists, then solve all samples.
+  nominal_arm: [3.1415926536, -1.5707963268, 1.5707963268, -1.5707963268, -1.5707963268, 0.0]
+
+output:
+  dir: outputs
+  basename: printing_line

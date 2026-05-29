@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Kinbody name="bluenb">
+ <Body name="Body1" type="dynamic">
+   <Mass type="mimicgeom">
+     <density>1000</density>
+   </Mass>
+   <Geom type="box">
+     <Extents>106.5e-3 70e-3 12.5e-3</Extents>
+     <diffuseColor>0.2 1.0 1.0</diffuseColor>
+   </Geom>
+ </Body>
+</Kinbody>
